@@ -78,12 +78,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置默认密码,已经设置有常量了
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         //记录当前记录时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
         //设置当前记录创建人id和修改人id
 
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
 
@@ -103,6 +103,37 @@ public class EmployeeServiceImpl implements EmployeeService {
         long total=page.getTotal();
         List<Employee> employeeList=page.getResult();
         return new PageResult(total,employeeList);
+    }
+
+    /**
+     * 启用禁用员工账号
+     * @param id
+     * @param status
+     */
+    @Override
+    public void changeStatus(Long id, Integer status) {
+    Employee employee=    Employee.builder()
+            .status(status)
+            .id(id)
+            .build();
+        employeeMapper.update(employee);
+
+    }
+
+    @Override
+    public Employee getById(Long id) {
+        Employee employee=employeeMapper.getByID(id);
+        employee.setPassword("#####");
+        return employee;
+    }
+
+    @Override
+    public void updateEmployee(EmployeeDTO employeeDTO) {
+        Employee employee=new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.update(employee);
     }
 
 }
